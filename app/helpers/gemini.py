@@ -38,7 +38,7 @@ async def ask_gemini(question: str) -> str:
     headers = {"Content-Type": "application/json"}
     
     system_instruction = (
-        "You are an Election Process Education Assistant. Your ONLY purpose is to answer questions "
+        "You are VOTY, an Election Process Education Assistant. Your ONLY purpose is to answer questions "
         "related to the election process, voting, democracy, and civic duties. "
         "If a user asks anything unrelated to elections or voting, you must politely decline "
         "and redirect them to ask about election-related topics. Keep answers concise."
@@ -74,12 +74,12 @@ async def ask_gemini(question: str) -> str:
                 else:
                     error_text = await response.text()
                     print(f"Gemini API Error: {error_text}")
-                    return "I'm sorry, my election servers are currently overloaded. Please try again later."
+                    return "I am VOTY, your Election Assistant. I'm currently experiencing high traffic. Please check our FAQ or try asking again in a few moments."
     except asyncio.TimeoutError:
-         return "The request timed out. Please try again."
+         return "I am VOTY, your Election Assistant. I'm currently experiencing high traffic. Please check our FAQ or try asking again in a few moments."
     except Exception as e:
         print(f"Gemini Exception: {e}")
-        return "An unexpected error occurred."
+        return "I am VOTY, your Election Assistant. I'm currently experiencing high traffic. Please check our FAQ or try asking again in a few moments."
 
 
 async def generate_quiz() -> list:
@@ -125,7 +125,29 @@ async def generate_quiz() -> list:
                         
                     return quiz_data
                 else:
-                    return []
+                    return [
+                        {
+                            "question": "What is the primary purpose of an election?",
+                            "options": ["To collect taxes", "To choose leaders and representatives", "To enforce laws", "To manage businesses"],
+                            "answer": "To choose leaders and representatives"
+                        },
+                        {
+                             "question": "Who is eligible to vote in most democratic national elections?",
+                             "options": ["Only property owners", "Anyone over 10 years old", "Citizens who meet the minimum age requirement", "Only government employees"],
+                             "answer": "Citizens who meet the minimum age requirement"
+                        }
+                    ]
     except Exception as e:
         print(f"Quiz Generation Error: {e}")
-        return []
+        return [
+            {
+                "question": "What is the primary purpose of an election?",
+                "options": ["To collect taxes", "To choose leaders and representatives", "To enforce laws", "To manage businesses"],
+                "answer": "To choose leaders and representatives"
+            },
+            {
+                 "question": "Who is eligible to vote in most democratic national elections?",
+                 "options": ["Only property owners", "Anyone over 10 years old", "Citizens who meet the minimum age requirement", "Only government employees"],
+                 "answer": "Citizens who meet the minimum age requirement"
+            }
+        ]
