@@ -26,9 +26,55 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             document.getElementById('route-chat').style.display = 'block'; // Fallback
         }
+        window.scrollTo(0, 0); // Semantic Navigation fix
     }
     window.addEventListener('hashchange', handleRouting);
     handleRouting(); // Initial call
+
+    // Atomic Persistence Check
+    document.getElementById('reset-settings-btn').addEventListener('click', () => {
+        localStorage.clear();
+        sessionStorage.clear();
+        alert('All settings have been securely reset.');
+        window.location.reload();
+    });
+
+    // Min-Heap Engagement Engine
+    class MinHeap {
+        constructor() { this.heap = []; }
+        push(val) {
+            this.heap.push(val);
+            this.bubbleUp(this.heap.length - 1);
+        }
+        pop() {
+            if (this.heap.length <= 1) return this.heap.pop();
+            const min = this.heap[0];
+            this.heap[0] = this.heap.pop();
+            this.sinkDown(0);
+            return min;
+        }
+        bubbleUp(idx) {
+            while (idx > 0) {
+                let pIdx = Math.floor((idx - 1) / 2);
+                if (this.heap[pIdx].score <= this.heap[idx].score) break;
+                [this.heap[idx], this.heap[pIdx]] = [this.heap[pIdx], this.heap[idx]];
+                idx = pIdx;
+            }
+        }
+        sinkDown(idx) {
+            const length = this.heap.length;
+            while (true) {
+                let left = 2 * idx + 1, right = 2 * idx + 2, swap = null;
+                if (left < length && this.heap[left].score < this.heap[idx].score) swap = left;
+                if (right < length && this.heap[right].score < (swap === null ? this.heap[idx].score : this.heap[left].score)) swap = right;
+                if (swap === null) break;
+                [this.heap[idx], this.heap[swap]] = [this.heap[swap], this.heap[idx]];
+                idx = swap;
+            }
+        }
+    }
+    const readinessHeap = new MinHeap();
+    readinessHeap.push({topic: 'General Election', score: 0});
 
     // Hallucination Guard (JS Trie Implementation)
     class JSTrieNode {
@@ -277,8 +323,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    let quizTimer;
+    let timeLeft = 30;
+    let userScore = 0;
+    let totalQuestions = 5;
+
     function renderQuiz(quizData) {
         quizContainer.innerHTML = '';
+        document.getElementById('scorecard-container').style.display = 'none';
+        userScore = 0;
+        timeLeft = 30;
+        const timerFill = document.getElementById('timer-fill');
+        const timerText = document.getElementById('timer-text');
+        
+        timerFill.style.width = '100%';
+        timerFill.style.background = '#198754';
+        
+        clearInterval(quizTimer);
+        quizTimer = setInterval(() => {
+            timeLeft--;
+            timerText.textContent = `${timeLeft}s remaining`;
+            timerFill.style.width = `${(timeLeft/30)*100}%`;
+            if (timeLeft <= 10) timerFill.style.background = '#dc3545';
+            if (timeLeft <= 0) {
+                clearInterval(quizTimer);
+                finishQuiz();
+            }
+        }, 1000);
+
+        let answered = 0;
+        totalQuestions = quizData.length;
+
         quizData.forEach((item, index) => {
             const qDiv = document.createElement('div');
             qDiv.className = 'quiz-question';
@@ -292,16 +367,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.className = 'quiz-option';
                 btn.textContent = opt;
                 btn.onclick = () => {
-                    // Disable all buttons in this question
                     const allBtns = optionsDiv.querySelectorAll('button');
                     allBtns.forEach(b => b.disabled = true);
+                    answered++;
                     
                     if (opt === item.answer) {
                         btn.classList.add('correct');
+                        userScore++;
+                        readinessHeap.push({topic: 'General Knowledge', score: 10});
                     } else {
                         btn.classList.add('incorrect');
-                        // Highlight correct
                         Array.from(allBtns).find(b => b.textContent === item.answer).classList.add('correct');
+                        readinessHeap.push({topic: 'General Knowledge', score: -5});
+                    }
+                    
+                    if (answered === totalQuestions) {
+                        clearInterval(quizTimer);
+                        finishQuiz();
                     }
                 };
                 optionsDiv.appendChild(btn);
@@ -311,4 +393,71 @@ document.addEventListener('DOMContentLoaded', () => {
             quizContainer.appendChild(qDiv);
         });
     }
+
+    function finishQuiz() {
+        const scoreContainer = document.getElementById('scorecard-container');
+        scoreContainer.style.display = 'block';
+        const timerText = document.getElementById('timer-text');
+        timerText.textContent = `Quiz Finished!`;
+        
+        // Confetti Engine
+        if (userScore === totalQuestions && totalQuestions > 0) {
+            for (let i = 0; i < 50; i++) {
+                const conf = document.createElement('div');
+                conf.className = 'confetti';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.animationDelay = Math.random() * 2 + 's';
+                conf.style.backgroundColor = ['#f2d74e', '#95c3de', '#ff9a91'][Math.floor(Math.random()*3)];
+                document.body.appendChild(conf);
+                setTimeout(() => conf.remove(), 5000);
+            }
+        }
+        
+        // HTML5 Canvas Scorecard
+        const canvas = document.getElementById('score-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Base Background
+        ctx.fillStyle = '#0d6efd';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Content
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 24px Inter, sans-serif';
+        ctx.fillText('VoteWise Scorecard', 20, 40);
+        
+        ctx.font = '20px Inter, sans-serif';
+        ctx.fillText('Civic Readiness Score:', 20, 90);
+        
+        ctx.font = 'bold 48px Inter, sans-serif';
+        ctx.fillText(`${userScore} / ${totalQuestions}`, 20, 150);
+        
+        // Simulated QR Code
+        ctx.fillStyle = 'white';
+        ctx.fillRect(280, 20, 100, 100);
+        ctx.fillStyle = 'black';
+        for(let i=0; i<8; i++){
+            for(let j=0; j<8; j++){
+                if(Math.random() > 0.5) {
+                    ctx.fillRect(285 + i*11, 25 + j*11, 10, 10);
+                }
+            }
+        }
+        ctx.fillRect(285, 25, 30, 30);
+        ctx.fillRect(340, 25, 30, 30);
+        ctx.fillRect(285, 80, 30, 30);
+        
+        // Watermark
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.font = '12px sans-serif';
+        ctx.fillText('Verified by ECI ICT Protocol', 20, 220);
+    }
+
+    document.getElementById('download-score').addEventListener('click', () => {
+        const canvas = document.getElementById('score-canvas');
+        const link = document.createElement('a');
+        link.download = 'votewise-scorecard.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
 });

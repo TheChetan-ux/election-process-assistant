@@ -24,6 +24,7 @@
     </script>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to Content</a>
     <header class="header">
         <div class="container header-content">
             <h1 class="logo">🗳️ VoteWise</h1>
@@ -44,7 +45,7 @@
         </div>
     </header>
 
-    <main class="container">
+    <main id="main-content" class="container" tabindex="-1">
         <section class="hero" aria-labelledby="hero-title">
             <h2 id="hero-title">Your 2026 ECI ICT Compliant Assistant</h2>
             <p>Ask VOTY about voting, access ECINET services, or learn to spot misinformation.</p>
@@ -148,11 +149,24 @@
         <div id="route-quiz" class="route-view" style="display: none;">
             <section class="quiz-section" id="quiz-section" aria-labelledby="quiz-title">
                 <h3 id="quiz-title">Test Your Knowledge</h3>
+                <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
+                <p id="timer-text" style="font-weight:600; margin-bottom: 10px;">30s remaining</p>
                 <button id="load-quiz-btn" class="btn-primary">Generate Quiz</button>
                 <div id="quiz-container"></div>
+                
+                <div id="scorecard-container" style="display:none; margin-top: 2rem;">
+                    <h3>Your VoteWise Scorecard</h3>
+                    <div class="digital-badge" id="digital-badge">🏅 Verified Citizen</div>
+                    <canvas id="score-canvas" width="400" height="250" style="border:1px solid var(--chat-border); width: 100%; border-radius: 8px; margin-bottom: 1rem;"></canvas>
+                    <button id="download-score" class="btn-primary">Download Scorecard</button>
+                </div>
             </section>
         </div>
     </main>
+
+    <footer style="text-align: center; padding: 2rem 1rem; margin-top: 2rem; border-top: 1px solid var(--chat-border);">
+        <button id="reset-settings-btn" style="background: none; border: none; color: var(--text-color); text-decoration: underline; cursor: pointer; opacity: 0.7; font-size: 0.9rem;">Reset All Settings (Atomic Persistence)</button>
+    </footer>
 
     <script>
         // Register Service Worker for Offline Mode
