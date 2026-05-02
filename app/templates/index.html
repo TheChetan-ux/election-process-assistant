@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Election Process Education Assistant - Your guide to voting and democracy.">
+    <title>Election Process Education</title>
+    <!-- Gzip and CDN optimizations -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0d6efd">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <h1 class="logo">🗳️ ElectionEdu</h1>
+            <div class="controls">
+                <select id="language-select" aria-label="Select Language">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="hi">हिन्दी</option>
+                </select>
+                <button id="theme-toggle" aria-label="Toggle Dark Mode">🌙</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero" aria-labelledby="hero-title">
+            <h2 id="hero-title">Understand the Election Process</h2>
+            <p>Ask our AI assistant any questions about voting, the electoral college, or registration. Take a quiz to test your knowledge!</p>
+        </section>
+
+        <section class="chat-section" aria-labelledby="chat-title">
+            <h3 id="chat-title" class="sr-only">Chat with Assistant</h3>
+            
+            <div class="suggested-chips" id="suggested-chips">
+                <button class="chip" onclick="askQuestion('How to register to vote?')">How to register to vote?</button>
+                <button class="chip" onclick="askQuestion('Where is my polling station?')">Where is my polling station?</button>
+                <button class="chip" onclick="askQuestion('What is early voting?')">What is early voting?</button>
+            </div>
+
+            <div class="chat-window" id="chat-window" role="log" aria-live="polite">
+                <!-- Chat messages will appear here -->
+                <div class="message ai-message">
+                    <p>Hello! I'm your Election Assistant. Ask me anything about the voting process.</p>
+                </div>
+            </div>
+
+            <form id="chat-form" class="chat-input-form" aria-label="Chat Form">
+                <div class="input-wrapper">
+                    <input type="text" id="chat-input" placeholder="Ask a question..." autocomplete="off" aria-label="Your Question" required maxlength="500">
+                    <input type="hidden" name="bot_trap" id="bot_trap" value="">
+                    <div id="autocomplete-suggestions" class="autocomplete-dropdown"></div>
+                </div>
+                <button type="submit" id="send-btn" aria-label="Send Message" class="btn-primary">Send</button>
+            </form>
+        </section>
+
+        <section class="quiz-section" id="quiz-section" aria-labelledby="quiz-title">
+            <h3 id="quiz-title">Test Your Knowledge</h3>
+            <button id="load-quiz-btn" class="btn-primary">Generate Quiz</button>
+            <div id="quiz-container"></div>
+        </section>
+    </main>
+
+    <script>
+        // Register Service Worker for Offline Mode
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('SW registered: ', registration);
+                }).catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
+            });
+        }
+    </script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

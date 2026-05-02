@@ -1,0 +1,9 @@
+{
+  "name": "ElectionEdu",
+  "short_name": "ElectionEdu",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d6efd",
+  "description": "Election Process Education Assistant"
+}
