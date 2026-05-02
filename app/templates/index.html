@@ -10,11 +10,28 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0d6efd">
+    <meta name="ai-content" content="generated">
+    <script>
+        // Persistence: Blocking inline script to prevent white flash
+        (function() {
+            try {
+                var theme = localStorage.getItem('theme') || 'light';
+                if (theme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); }
+                var fontSize = localStorage.getItem('fontSize') || 'medium';
+                document.documentElement.setAttribute('data-font-size', fontSize);
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body>
     <header class="header">
         <div class="container header-content">
-            <h1 class="logo">🗳️ ElectionEdu</h1>
+            <h1 class="logo">🗳️ VoteWise</h1>
+            <nav class="main-nav">
+                <a href="#chat">VOTY Chat</a>
+                <a href="#services">Voter Action Center</a>
+                <a href="#deepfake">Spot the Fake</a>
+            </nav>
             <div class="controls">
                 <select id="language-select" aria-label="Select Language">
                     <option value="en">English</option>
@@ -29,18 +46,20 @@
 
     <main class="container">
         <section class="hero" aria-labelledby="hero-title">
-            <h2 id="hero-title">Understand the Election Process</h2>
-            <p>Ask our AI assistant any questions about voting, the electoral college, or registration. Take a quiz to test your knowledge!</p>
+            <h2 id="hero-title">Your 2026 ECI ICT Compliant Assistant</h2>
+            <p>Ask VOTY about voting, access ECINET services, or learn to spot misinformation.</p>
         </section>
 
-        <section class="chat-section" aria-labelledby="chat-title">
-            <h3 id="chat-title" class="sr-only">Chat with Assistant</h3>
-            
-            <div class="suggested-chips" id="suggested-chips">
-                <button class="chip" onclick="askQuestion('How to register to vote?')">How to register to vote?</button>
-                <button class="chip" onclick="askQuestion('Where is my polling station?')">Where is my polling station?</button>
-                <button class="chip" onclick="askQuestion('What is early voting?')">What is early voting?</button>
-            </div>
+        <!-- ROUTE: CHET -->
+        <div id="route-chat" class="route-view active">
+            <section class="chat-section" aria-labelledby="chat-title">
+                <h3 id="chat-title" class="sr-only">Chat with Assistant</h3>
+                
+                <div class="suggested-chips" id="suggested-chips">
+                    <button class="chip" onclick="askQuestion('How to apply for e-EPIC?')">How to apply for e-EPIC?</button>
+                    <button class="chip" onclick="askQuestion('What is Form 6?')">What is Form 6?</button>
+                    <button class="chip" onclick="askQuestion('Where is my polling station?')">Where is my polling station?</button>
+                </div>
 
             <div class="chat-window" id="chat-window" role="log" aria-live="polite">
                 <!-- Chat messages will appear here -->
@@ -70,13 +89,69 @@
                 </div>
                 <button type="submit" id="send-btn" aria-label="Send Message" class="btn-primary">Send</button>
             </form>
-        </section>
+            </section>
+        </div>
 
-        <section class="quiz-section" id="quiz-section" aria-labelledby="quiz-title">
-            <h3 id="quiz-title">Test Your Knowledge</h3>
-            <button id="load-quiz-btn" class="btn-primary">Generate Quiz</button>
-            <div id="quiz-container"></div>
-        </section>
+        <!-- ROUTE: SERVICES (Voter Action Center) -->
+        <div id="route-services" class="route-view" style="display: none;">
+            <section class="services-section">
+                <h2>Voter Action Center (ECINET Aligned)</h2>
+                <div class="service-cards">
+                    <div class="service-card">
+                        <h3>Access e-EPIC Portal</h3>
+                        <p>Download your Electronic Electoral Photo Identity Card directly from the unified platform.</p>
+                        <button class="btn-primary" onclick="askQuestion('Guide me through the e-EPIC Portal')">Initiate e-EPIC Guide</button>
+                    </div>
+                    <div class="service-card">
+                        <h3>Initiate Form 6</h3>
+                        <p>Begin your New Voter Registration procedural requirements.</p>
+                        <button class="btn-primary" onclick="askQuestion('How do I fill out Form 6?')">Start Form 6 Guide</button>
+                    </div>
+                    <div class="service-card">
+                        <h3>Locate your BLO</h3>
+                        <p>Enter your 6-digit PIN code to map your Booth Level Officer address logic.</p>
+                        <div class="input-wrapper" style="display: flex; gap: 10px; margin-top: 10px;">
+                            <input type="text" id="pin-input" placeholder="e.g. 110001" maxlength="6">
+                            <button class="btn-primary" id="find-blo-btn">Track</button>
+                        </div>
+                        <p id="blo-result" style="margin-top: 10px; font-weight: 600; color: var(--primary-color);"></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ROUTE: DEEPFAKE (Spot the Fake) -->
+        <div id="route-deepfake" class="route-view" style="display: none;">
+            <section class="deepfake-module">
+                <h2>Spot the Fake</h2>
+                <p>Learn how to identify AI-generated misinformation during the 2026 Elections.</p>
+                <div class="card error-card">
+                    <h3>❌ Misinformation Red Flags</h3>
+                    <ul>
+                        <li>Unnatural blinking or robotic voice in video broadcasts.</li>
+                        <li>Sensationalist headlines with zero verified source links.</li>
+                        <li>Unverified WhatsApp forwards regarding polling dates.</li>
+                    </ul>
+                </div>
+                <div class="card success-card">
+                    <h3>✅ Verification Checklist (ECINET Mandates)</h3>
+                    <ul>
+                        <li>Always check for the <strong>Official ECI Digital Signature</strong> on PDF notifications.</li>
+                        <li>Scan the <strong>Official QR Code</strong> provided on physical election notices.</li>
+                        <li>Verify dates directly on <strong>eci.gov.in</strong>.</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <!-- ROUTE: QUIZ -->
+        <div id="route-quiz" class="route-view" style="display: none;">
+            <section class="quiz-section" id="quiz-section" aria-labelledby="quiz-title">
+                <h3 id="quiz-title">Test Your Knowledge</h3>
+                <button id="load-quiz-btn" class="btn-primary">Generate Quiz</button>
+                <div id="quiz-container"></div>
+            </section>
+        </div>
     </main>
 
     <script>

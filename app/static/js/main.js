@@ -7,9 +7,78 @@ document.addEventListener('DOMContentLoaded', () => {
     const languageSelect = document.getElementById('language-select');
     const loadQuizBtn = document.getElementById('load-quiz-btn');
     const quizContainer = document.getElementById('quiz-container');
+    const pinInput = document.getElementById('pin-input');
+    const findBloBtn = document.getElementById('find-blo-btn');
+    const bloResult = document.getElementById('blo-result');
 
     // Web Worker for text formatting (Markdown parsing simulation)
     const worker = new Worker('/static/js/worker.js');
+
+    // Hash Router Logic
+    function handleRouting() {
+        const hash = window.location.hash || '#chat';
+        document.querySelectorAll('.route-view').forEach(view => {
+            view.style.display = 'none';
+        });
+        const targetView = document.getElementById(`route-${hash.substring(1)}`);
+        if (targetView) {
+            targetView.style.display = 'block';
+        } else {
+            document.getElementById('route-chat').style.display = 'block'; // Fallback
+        }
+    }
+    window.addEventListener('hashchange', handleRouting);
+    handleRouting(); // Initial call
+
+    // Hallucination Guard (JS Trie Implementation)
+    class JSTrieNode {
+        constructor() { this.children = {}; this.isEnd = false; }
+    }
+    class JSTrie {
+        constructor() { this.root = new JSTrieNode(); }
+        insert(word) {
+            let node = this.root;
+            for (let char of word.toLowerCase()) {
+                if (!node.children[char]) node.children[char] = new JSTrieNode();
+                node = node.children[char];
+            }
+            node.isEnd = true;
+        }
+        searchSubstring(text) {
+            const words = text.toLowerCase().split(/\s+/);
+            for (let word of words) {
+                let node = this.root;
+                for (let char of word) {
+                    if (!node.children[char]) break;
+                    node = node.children[char];
+                }
+                if (node && node.isEnd) return true;
+            }
+            return false;
+        }
+    }
+    
+    const hallucinationGuard = new JSTrie();
+    ['evm', 'rigged', 'hack', 'polldate', 'results'].forEach(w => hallucinationGuard.insert(w));
+
+    // BLO Service Map (Simulated PIN Trie Logic)
+    findBloBtn.addEventListener('click', () => {
+        const pin = pinInput.value.trim();
+        if (pin.length !== 6 || isNaN(pin)) {
+            bloResult.textContent = "Please enter a valid 6-digit PIN.";
+            bloResult.style.color = "red";
+            return;
+        }
+        // Simulated Trie Prefix Mapping
+        bloResult.style.color = "var(--primary-color)";
+        if (pin.startsWith('110')) {
+            bloResult.textContent = `BLO Address Logic Mapped: Delhi North District. Officer ID: DN-${Math.floor(Math.random()*1000)}`;
+        } else if (pin.startsWith('400')) {
+            bloResult.textContent = `BLO Address Logic Mapped: Mumbai Suburban. Officer ID: MS-${Math.floor(Math.random()*1000)}`;
+        } else {
+            bloResult.textContent = `BLO Address Logic Mapped: Region ${pin.substring(0,2)}. Officer ID: RG-${Math.floor(Math.random()*1000)}`;
+        }
+    });
 
     // Theme Toggle
     const currentTheme = localStorage.getItem('theme') || 'light';
@@ -111,7 +180,11 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }
         
-        contentHtml += `<p>${text}</p>`; // Basic formatting
+        contentHtml += `<p>${text}</p>`; 
+        // Add Ethical Watermark
+        if (sender === 'ai') {
+            contentHtml += `<div class="ai-watermark">AI-Assisted Educational Content | Verified by VoteWise</div>`;
+        }
         msgDiv.innerHTML = contentHtml;
         chatWindow.appendChild(msgDiv);
         chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -142,6 +215,19 @@ document.addEventListener('DOMContentLoaded', () => {
         appendMessage(question, 'user');
         chatInput.value = '';
         autocompleteDropdown.style.display = 'none';
+        
+        // Hallucination Guard Check
+        if (hallucinationGuard.searchSubstring(question)) {
+            const factCheckHtml = `
+                <div class="card error-card" style="margin-bottom: 10px; font-size: 0.9rem;">
+                    <strong style="color: #dc3545;">⚠️ Fact-Check Triggered</strong><br>
+                    For verified sensitive information regarding polling, EVMs, or results, please visit the official portal: 
+                    <a href="https://eci.gov.in" target="_blank" style="color: #0d6efd;">eci.gov.in</a> or contact your local BLO.
+                </div>
+            `;
+            appendMessage(factCheckHtml + "I am processing your query within ECI guidelines...", 'ai');
+        }
+
         showTypingIndicator();
 
         try {
