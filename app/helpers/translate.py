@@ -23,8 +23,6 @@ async def translate_text(text: str, target_lang: str) -> str:
                     data = await response.json()
                     return data['data']['translations'][0]['translatedText']
                 else:
-                    print(f"Translate API Error: {await response.text()}")
-                    return text # Fallback to original text
-    except Exception as e:
-        print(f"Translate Exception: {e}")
+                    return text # Silent failure fallback to original text
+    except Exception:
         return text
