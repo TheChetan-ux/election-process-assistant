@@ -37,15 +37,11 @@ async def chat():
     if len(question) > 500:
         return jsonify({"error": "Question too long. Max 500 characters."}), 400
         
-    # Deduplicate requests
+    # Deduplicate requests and use Gemini for native translation
     try:
-        answer = await deduplicator.execute(question, ask_gemini, question)
+        answer = await deduplicator.execute(f"{question}_{target_lang}", ask_gemini, question, target_lang=target_lang)
     except Exception as e:
         return jsonify({"error": "Internal server error"}), 500
-        
-    # Translate if necessary
-    if target_lang != 'en':
-        answer = await translate_text(answer, target_lang)
         
     # XSS Prevention
     safe_answer = sanitize_html(answer)
@@ -72,20 +68,5 @@ def autocomplete():
 async def quiz():
     """Dynamic quiz section"""
     target_lang = request.args.get('lang', 'en')
-    quiz_data = await generate_quiz()
-    
-    # Translate quiz if needed
-    if target_lang != 'en' and quiz_data:
-        translated_quiz = []
-        for q in quiz_data:
-            t_q = await translate_text(q['question'], target_lang)
-            t_options = [await translate_text(opt, target_lang) for opt in q['options']]
-            t_answer = await translate_text(q['answer'], target_lang)
-            translated_quiz.append({
-                "question": t_q,
-                "options": t_options,
-                "answer": t_answer
-            })
-        quiz_data = translated_quiz
-        
+    quiz_data = await generate_quiz(target_lang=target_lang)
     return jsonify({"quiz": quiz_data})
