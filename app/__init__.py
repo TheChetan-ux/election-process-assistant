@@ -10,8 +10,8 @@ compress = Compress()
 cors = CORS()
 
 # Custom rate limiters
-global_token_bucket = TokenBucketRateLimiter(capacity=1000, refill_rate=100) # 100 req/sec globally
-ip_rate_limiter = SlidingWindowIPRateLimiter(limit=10, window_size=60)
+global_token_bucket = TokenBucketRateLimiter(capacity=5000, refill_rate=500) # 500 req/sec globally
+ip_rate_limiter = SlidingWindowIPRateLimiter(limit=100, window_size=60) # 100 per minute per IP
 
 def create_app(config_class=Config):
     app = Flask(__name__)

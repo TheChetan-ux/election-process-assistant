@@ -3,6 +3,8 @@ import aiohttp
 import asyncio
 import json
 import redis.asyncio as redis
+from dotenv import load_dotenv
+load_dotenv()
 from app.models.lru_cache import LRUCache
 from app.helpers.security import hash_input
 
@@ -10,9 +12,22 @@ from app.helpers.security import hash_input
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
 
+if not GEMINI_API_KEY:
+    print("CRITICAL WARNING: GEMINI_API_KEY IS EMPTY! Check your .env file.")
+else:
+    print(f"DEBUG: GEMINI_API_KEY LOADED: {GEMINI_API_KEY[:5]}...{GEMINI_API_KEY[-5:]}")
+
 # Caches
 redis_client = redis.from_url(REDIS_URL, decode_responses=True)
 lru_cache = LRUCache(capacity=1000)
+
+LANG_MAP = {
+    'en': 'English', 'hi': 'Hindi', 'bn': 'Bengali', 'te': 'Telugu',
+    'mr': 'Marathi', 'ta': 'Tamil', 'ur': 'Urdu', 'gu': 'Gujarati',
+    'kn': 'Kannada', 'or': 'Odia', 'pa': 'Punjabi', 'ml': 'Malayalam',
+    'es': 'Spanish', 'fr': 'French', 'ar': 'Arabic', 'zh': 'Chinese',
+    'ru': 'Russian', 'ja': 'Japanese', 'de': 'German', 'pt': 'Portuguese'
+}
 
 async def ask_gemini(question: str, target_lang: str = 'en') -> str:
     """Conversational Gemini powered chatbot that only answers election related questions and redirects off topic questions politely"""
@@ -34,14 +49,16 @@ async def ask_gemini(question: str, target_lang: str = 'en') -> str:
         print(f"Redis error: {e}")
 
     # Gemini API Call (Async)
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key={GEMINI_API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
     headers = {"Content-Type": "application/json"}
     
+    lang_name = LANG_MAP.get(target_lang, 'English')
     system_instruction = (
         "You are VOTY, an Election Process Education Assistant. Your ONLY purpose is to answer questions "
         "related to the election process, voting, democracy, and civic duties. "
         "If asked about e-EPIC or Form 6, you must act as a Service-Clerk and guide them step-by-step through the digital requirements. "
-        f"CRITICAL RULE: You MUST translate and respond to this user entirely in the language corresponding to this ISO code: '{target_lang}'. "
+        f"CRITICAL RULE: You MUST ignore the input language and respond to the user ENTIRELY in {lang_name}. "
+        f"Even if the user asks in English, your response must be in {lang_name}."
         "Keep answers concise."
     )
     
@@ -75,12 +92,12 @@ async def ask_gemini(question: str, target_lang: str = 'en') -> str:
                 else:
                     error_text = await response.text()
                     print(f"Gemini API Error: {error_text}")
-                    return "I am VOTY, your Election Assistant. I'm currently experiencing high traffic. Please check our FAQ or try asking again in a few moments."
+                    return f"VOTY DEBUG: Gemini API Error ({response.status}). Please check your API key or quota."
     except asyncio.TimeoutError:
-         return "I am VOTY, your Election Assistant. I'm currently experiencing high traffic. Please check our FAQ or try asking again in a few moments."
+         return "VOTY DEBUG: Request timed out. Please check your internet connection."
     except Exception as e:
         print(f"Gemini Exception: {e}")
-        return "I am VOTY, your Election Assistant. I'm currently experiencing high traffic. Please check our FAQ or try asking again in a few moments."
+        return f"VOTY DEBUG: Internal Exception: {str(e)}"
 
 
 async def generate_quiz(target_lang: str = 'en') -> list:
@@ -95,7 +112,7 @@ async def generate_quiz(target_lang: str = 'en') -> list:
     except Exception:
         pass
         
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key={GEMINI_API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
     headers = {"Content-Type": "application/json"}
     
     prompt = (

@@ -138,12 +138,38 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.removeAttribute('data-theme');
             localStorage.setItem('theme', 'light');
             themeToggle.textContent = '🌙';
+            showToast('☀️ Light Mode Activated');
         } else {
             document.documentElement.setAttribute('data-theme', 'dark');
             localStorage.setItem('theme', 'dark');
             themeToggle.textContent = '☀️';
+            showToast('🌙 Dark Mode Activated');
         }
     });
+
+    // Toast notification utility
+    function showToast(message) {
+        let toast = document.getElementById('voty-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'voty-toast';
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // Real-time Language Change Handler
+    languageSelect.addEventListener('change', () => {
+        const selectedText = languageSelect.options[languageSelect.selectedIndex].text;
+        showToast(`🌐 Language switched to ${selectedText}`);
+        chatInput.placeholder = `Ask a question in ${selectedText}...`;
+        // Inject a VOTY greeting in the new language
+        appendMessage(`Language switched to ${selectedText}. I will now respond in ${selectedText}!`, 'ai');
+    });
+
 
     // Debounce function
     function debounce(func, wait) {
@@ -291,6 +317,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 worker.onmessage = function(e) {
                     appendMessage(e.data.text, 'ai');
                 };
+            } else if (res.status === 429) {
+                appendMessage('⏳ VOTY is receiving too many requests right now. Please wait 15 seconds and try again. This is a free-tier API limit.', 'ai');
             } else {
                 appendMessage(data.error || 'An error occurred.', 'ai');
             }
