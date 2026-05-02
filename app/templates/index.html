@@ -45,7 +45,20 @@
             <div class="chat-window" id="chat-window" role="log" aria-live="polite">
                 <!-- Chat messages will appear here -->
                 <div class="message ai-message">
-                    <p>Hello! I'm your Election Assistant. Ask me anything about the voting process.</p>
+                    <div class="message-header">
+                        <div class="voty-avatar">
+                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="50" r="50" fill="#0d6efd" />
+                                <!-- Ballot box -->
+                                <rect x="25" y="40" width="50" height="40" rx="4" fill="#ffffff" />
+                                <rect x="20" y="35" width="60" height="5" rx="2" fill="#e9ecef" />
+                                <!-- Checkmark -->
+                                <path d="M40 55 L48 63 L65 45" stroke="#0d6efd" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            </svg>
+                        </div>
+                        <span class="voty-name">VOTY</span>
+                    </div>
+                    <p>Hello! I'm VOTY, your Election Assistant. Ask me anything about the voting process.</p>
                 </div>
             </div>
 

@@ -93,7 +93,26 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendMessage(text, sender) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${sender}-message`;
-        msgDiv.innerHTML = `<p>${text}</p>`; // Basic formatting
+        
+        let contentHtml = '';
+        if (sender === 'ai') {
+            contentHtml = `
+                <div class="message-header">
+                    <div class="voty-avatar">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="50" fill="#0d6efd" />
+                            <rect x="25" y="40" width="50" height="40" rx="4" fill="#ffffff" />
+                            <rect x="20" y="35" width="60" height="5" rx="2" fill="#e9ecef" />
+                            <path d="M40 55 L48 63 L65 45" stroke="#0d6efd" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        </svg>
+                    </div>
+                    <span class="voty-name">VOTY</span>
+                </div>
+            `;
+        }
+        
+        contentHtml += `<p>${text}</p>`; // Basic formatting
+        msgDiv.innerHTML = contentHtml;
         chatWindow.appendChild(msgDiv);
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
