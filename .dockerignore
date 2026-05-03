@@ -1,0 +1,10 @@
+.git
+.gitignore
+venv/
+__pycache__/
+*.pyc
+.env
+extracted_main_js.txt
+.gemini/
+app.yaml
+.gcloudignore

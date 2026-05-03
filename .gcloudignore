@@ -1,0 +1,9 @@
+.git
+.gitignore
+venv/
+__pycache__/
+*.pyc
+.env
+extracted_main_js.txt
+node_modules/
+.gemini/
