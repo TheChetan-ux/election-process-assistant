@@ -3,13 +3,13 @@ import aiohttp
 import asyncio
 import json
 import redis.asyncio as redis
-from dotenv import load_dotenv
-load_dotenv()
+# Environment variables are loaded in run.py
 from app.models.lru_cache import LRUCache
 from app.helpers.security import hash_input
 
 # Environment Variables
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
 
 if not GEMINI_API_KEY:
@@ -29,11 +29,11 @@ LANG_MAP = {
     'ru': 'Russian', 'ja': 'Japanese', 'de': 'German', 'pt': 'Portuguese'
 }
 
-async def ask_gemini(question: str, target_lang: str = 'en') -> str:
+async def ask_gemini(question: str, target_lang: str = 'en', is_silence_period: bool = False) -> str:
     """Conversational Gemini powered chatbot that only answers election related questions and redirects off topic questions politely"""
     
     # Check LRU Cache (L1)
-    q_hash = hash_input(question.lower().strip() + target_lang)
+    q_hash = hash_input(question.lower().strip() + target_lang + str(is_silence_period))
     l1_result = lru_cache.get(q_hash)
     if l1_result is not None:
         return l1_result
@@ -48,56 +48,62 @@ async def ask_gemini(question: str, target_lang: str = 'en') -> str:
         # Ignore redis error if redis is down
         print(f"Redis error: {e}")
 
-    # Gemini API Call (Async)
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+    # Gemini API Call (Async) - Using requested Flash model
+    url = f"https://generativelanguage.googleapis.com/v1/models/{MODEL_NAME}:generateContent?key={GEMINI_API_KEY}"
     headers = {"Content-Type": "application/json"}
     
     lang_name = LANG_MAP.get(target_lang, 'English')
-    system_instruction = (
-        "You are VOTY, an Election Process Education Assistant. Your ONLY purpose is to answer questions "
-        "related to the election process, voting, democracy, and civic duties. "
-        "If asked about e-EPIC or Form 6, you must act as a Service-Clerk and guide them step-by-step through the digital requirements. "
-        f"CRITICAL RULE: You MUST ignore the input language and respond to the user ENTIRELY in {lang_name}. "
-        f"Even if the user asks in English, your response must be in {lang_name}."
-        "Keep answers concise."
-    )
+    
+    if is_silence_period:
+        system_instruction = (
+            "You are VOTY, operating in Logistics Only Mode due to the 48-hour Silence Period before polling. "
+            "You MUST RESTRICT all political analysis, candidate promotion, or discussion of election outcomes. "
+            "Focus ONLY on logistics: booth locations, voting procedures, required IDs, and ECI guidelines. "
+            f"CRITICAL RULE: Respond to the user ENTIRELY in {lang_name}."
+        )
+    else:
+        system_instruction = (
+            "You are VOTY, an Election Process Education Assistant. Your ONLY purpose is to answer questions "
+            "related to the election process, voting, democracy, and civic duties. "
+            "If asked about a specific candidate, provide a neutral, 3-point summary of their public profile and declared constituency. "
+            "If asked about e-EPIC or Form 6, guide them step-by-step through the digital requirements. "
+            f"CRITICAL RULE: Respond to the user ENTIRELY in {lang_name}. "
+            "Keep answers concise and informative."
+        )
     
     payload = {
-        "contents": [{"parts": [{"text": f"System Instruction: {system_instruction}\n\nUser Question: {question}"}]}],
+        "contents": [{"parts": [{"text": f"{system_instruction}\n\nUser Question: {question}"}]}],
         "generationConfig": {
             "temperature": 0.2,
-            "maxOutputTokens": 800,
+            "topP": 0.8,
+            "topK": 40,
+            "maxOutputTokens": 2048,
         }
     }
     
     try:
-        # Using connection pooling from aiohttp
         async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload, timeout=10) as response:
+            async with session.post(url, headers=headers, json=payload, timeout=15) as response:
                 if response.status == 200:
                     data = await response.json()
                     try:
                         answer = data['candidates'][0]['content']['parts'][0]['text']
                     except (KeyError, IndexError):
-                        answer = "I'm sorry, I couldn't generate an answer for that."
+                        answer = "I apologize, but I am unable to provide information on that specific topic. Please ask about the election process or voter registration."
                     
                     # Update Caches
                     lru_cache.put(q_hash, answer)
                     try:
-                        await redis_client.set(f"faq:{q_hash}", answer, ex=86400) # 24h cache
-                    except Exception:
-                        pass
-                        
+                        await redis_client.set(f"faq:{q_hash}", answer, ex=86400)
+                    except Exception: pass
                     return answer
                 else:
-                    error_text = await response.text()
-                    print(f"Gemini API Error: {error_text}")
-                    return f"VOTY DEBUG: Gemini API Error ({response.status}). Please check your API key or quota."
-    except asyncio.TimeoutError:
-         return "VOTY DEBUG: Request timed out. Please check your internet connection."
+                    error_data = await response.text()
+                    print(f"Gemini API Error ({response.status}): {error_data}")
+                    return "VOTY is currently undergoing maintenance. Please try again in a few moments."
     except Exception as e:
-        print(f"Gemini Exception: {e}")
-        return f"VOTY DEBUG: Internal Exception: {str(e)}"
+        print(f"Connection Error: {e}")
+        return "I'm having trouble connecting to my knowledge base. Please check your internet connection and try again."
 
 
 async def generate_quiz(target_lang: str = 'en') -> list:
@@ -112,7 +118,7 @@ async def generate_quiz(target_lang: str = 'en') -> list:
     except Exception:
         pass
         
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1/models/{MODEL_NAME}:generateContent?key={GEMINI_API_KEY}"
     headers = {"Content-Type": "application/json"}
     
     prompt = (

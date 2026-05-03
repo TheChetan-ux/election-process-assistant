@@ -1,0 +1,55 @@
+{
+  "election_events": [
+    {
+      "state": "West Bengal",
+      "phase": "Phase 1",
+      "date": "April 23, 2026"
+    },
+    {
+      "state": "West Bengal",
+      "phase": "Phase 2",
+      "date": "April 29, 2026"
+    },
+    {
+      "state": "Kerala",
+      "phase": "Single Phase",
+      "date": "April 14, 2026"
+    },
+    {
+      "state": "Tamil Nadu",
+      "phase": "Single Phase",
+      "date": "April 14, 2026"
+    },
+    {
+      "state": "Puducherry",
+      "phase": "Single Phase",
+      "date": "April 14, 2026"
+    },
+    {
+      "event": "Counting Day",
+      "date": "May 4, 2026"
+    }
+  ],
+  "candidates": [
+    {
+      "state": "West Bengal",
+      "name": "Mamata Banerjee",
+      "party": "AITC"
+    },
+    {
+      "state": "Tamil Nadu",
+      "name": "M.K. Stalin",
+      "party": "DMK"
+    },
+    {
+      "state": "Kerala",
+      "name": "Pinarayi Vijayan",
+      "party": "CPI(M)"
+    },
+    {
+      "state": "Assam",
+      "name": "Himanta Biswa Sarma",
+      "party": "BJP"
+    }
+  ]
+}

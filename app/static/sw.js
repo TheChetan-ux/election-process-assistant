@@ -41,7 +41,7 @@ const offlineHTML = `
         <h1>You are Offline!</h1>
         <p>I am VOTY. It seems you've lost connection, but democracy never stops. Here are some quick facts while we wait for the network:</p>
         <ul>
-            \${offlineFacts.map(fact => '<li>' + fact + '</li>').join('')}
+            ${offlineFacts.map(fact => '<li>' + fact + '</li>').join('')}
         </ul>
         <button class="btn-retry" onclick="window.location.reload()">Try Reconnecting</button>
     </div>

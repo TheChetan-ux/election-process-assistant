@@ -61,7 +61,11 @@ Access the platform at `http://127.0.0.1:5000`.
 
 ## ⚖️ Ethical AI & Compliance
 VoteWise adheres to the strict **ECI 2026 Directives**:
+<<<<<<< HEAD
 - **Silence Period Sentinel:** Automatically detects if the system clock is within 48 hours of polling days (e.g., April 14, 23, 29). If active, VOTY toggles into "Logistics Only Mode", strictly prohibiting political analysis and candidate information, defaulting to booth location and voter procedure guidance.
+=======
+- **Silence Period Sentinel:** Automatically toggles into "Logistics Mode" 48 hours before polling to prevent political bias.
+>>>>>>> d667752 (Integrated Gemini 2.5 Flash, updated modern UI, and improved backend resilience)
 - **Ethical Watermarking:** All AI responses are labeled as "AI-Assisted Educational Content" to maintain transparency.
 - **Inclusive Design:** Optimized for low-literacy accessibility via clear iconography and vernacular persistence.
 

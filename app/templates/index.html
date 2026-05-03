@@ -3,35 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Election Process Education Assistant - Your guide to voting and democracy.">
-    <title>Election Process Education</title>
-    <!-- Gzip and CDN optimizations -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="VoteWise — India's most comprehensive Election Education & AI Assistant platform. Learn about voting, Indian politics, and interact with VOTY.">
+    <title>VoteWise — India's Election Intelligence Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0d6efd">
-    <meta name="ai-content" content="generated">
     <script>
-        // Persistence: Blocking inline script to prevent white flash
         (function() {
             try {
                 var theme = localStorage.getItem('theme') || 'light';
-                if (theme === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); }
-                var fontSize = localStorage.getItem('fontSize') || 'medium';
-                document.documentElement.setAttribute('data-font-size', fontSize);
-            } catch (e) {}
+                if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+                var lang = localStorage.getItem('lang') || 'en';
+                document.documentElement.setAttribute('lang', lang);
+            } catch(e) {}
         })();
     </script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to Content</a>
-    <header class="header">
-        <div class="container header-content">
-            <h1 class="logo">🗳️ VoteWise</h1>
-            <nav class="main-nav">
-                <a href="#chat">VOTY Chat</a>
-                <a href="#services">Voter Action Center</a>
-                <a href="#deepfake">Spot the Fake</a>
+
+    <!-- HEADER -->
+    <header class="header" id="top">
+        <div class="header-content container-wide">
+            <div class="logo-group">
+                <span class="logo-icon">🗳️</span>
+                <span class="logo-text">VoteWise</span>
+                <span class="logo-badge">BETA</span>
+            </div>
+            <nav class="main-nav" id="main-nav">
+                <a href="#home" class="nav-link" data-i18n="navHome">Home</a>
+                <a href="#flashcards" class="nav-link" data-i18n="navFlashcards">Political Cards</a>
+                <a href="#services" class="nav-link" data-i18n="navServices">Voter Center</a>
+                <a href="#voty" class="nav-link nav-highlight" data-i18n="navVoty">🤖 VOTY Chat</a>
             </nav>
             <div class="controls">
                 <select id="language-select" aria-label="Select Language">
@@ -44,158 +48,484 @@
                     <option value="ur">اردو (Urdu)</option>
                     <option value="gu">ગુજરાતી (Gujarati)</option>
                     <option value="kn">ಕನ್ನಡ (Kannada)</option>
-                    <option value="or">ଓଡ଼ିଆ (Odia)</option>
                     <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
                     <option value="ml">മലയാളം (Malayalam)</option>
-                    <option value="es">Español (Spanish)</option>
-                    <option value="fr">Français (French)</option>
-                    <option value="ar">العربية (Arabic)</option>
-                    <option value="zh">中文 (Chinese)</option>
-                    <option value="ru">Русский (Russian)</option>
-                    <option value="ja">日本語 (Japanese)</option>
-                    <option value="de">Deutsch (German)</option>
-                    <option value="pt">Português (Portuguese)</option>
                 </select>
-                <button id="theme-toggle" aria-label="Toggle Dark Mode">🌙</button>
+                <button id="theme-toggle" aria-label="Toggle Theme">🌙</button>
+                <button class="nav-burger" id="nav-burger" aria-label="Toggle Menu">☰</button>
             </div>
         </div>
     </header>
 
-    <main id="main-content" class="container" tabindex="-1">
-        <section class="hero" aria-labelledby="hero-title">
-            <h2 id="hero-title">Your 2026 ECI ICT Compliant Assistant</h2>
-            <p>Ask VOTY about voting, access ECINET services, or learn to spot misinformation.</p>
-        </section>
+    <main id="main-content">
+        <!-- ======== SECTION 1: HOME — VOTING KNOWLEDGE ======== -->
+        <div id="route-home" class="route-view active">
 
-        <!-- ROUTE: CHET -->
-        <div id="route-chat" class="route-view active">
-            <section class="chat-section" aria-labelledby="chat-title">
-                <h3 id="chat-title" class="sr-only">Chat with Assistant</h3>
-                
+            <!-- Hero Banner -->
+            <section class="hero-banner">
+                <div class="hero-overlay"></div>
+                <div class="hero-content container-wide">
+                    <div class="hero-badge" data-i18n="heroBadge">🇮🇳 Election Commission of India — ICT Compliant 2026</div>
+                    <h1 class="hero-title" data-i18n="heroTitle">Know Your Vote. Shape Your Nation.</h1>
+                    <p class="hero-subtitle" data-i18n="heroSubtitle">India's most comprehensive election intelligence platform — built for every citizen, in every language.</p>
+                    <div class="hero-cta-group">
+                        <a href="#voty" class="btn-hero-primary" data-i18n="ctaVoty">🤖 Ask VOTY</a>
+                        <a href="#flashcards" class="btn-hero-secondary" data-i18n="ctaCards">📚 Political Cards</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-pill" data-i18n="stat1">🗳️ <strong>968M+</strong> Registered Voters</div>
+                        <div class="stat-pill" data-i18n="stat2">📍 <strong>10.5L+</strong> Polling Stations</div>
+                        <div class="stat-pill" data-i18n="stat3">🌐 <strong>20+</strong> Languages Supported</div>
+                    </div>
+                </div>
+                <!-- Scroll down indicator -->
+                <div class="hero-scroll-hint">
+                    <span>Scroll to explore</span>
+                    <div class="scroll-chevron">&#8964;</div>
+                </div>
+            </section>
+
+            <!-- What is Voting -->
+            <section class="knowledge-section container-wide">
+                <div class="section-label" data-i18n="secVotingLabel">🗳️ WHAT IS VOTING?</div>
+                <h2 class="section-title" data-i18n="whatVotingTitle">The Power of Your Vote</h2>
+                <div class="knowledge-grid">
+                    <div class="knowledge-card primary-card">
+                        <div class="card-icon">🗳️</div>
+                        <h3 data-i18n="kc1Title">What is Voting?</h3>
+                        <p data-i18n="kc1Body">Voting is the democratic right of every eligible Indian citizen to elect their representatives to the Lok Sabha, State Assemblies, and local bodies. It is the most direct form of civic participation in India's parliamentary democracy.</p>
+                        <div class="card-tag" data-i18n="kc1Tag">Fundamental Right</div>
+                    </div>
+                    <div class="knowledge-card">
+                        <div class="card-icon">⚖️</div>
+                        <h3 data-i18n="kc2Title">Constitutional Basis</h3>
+                        <p data-i18n="kc2Body">Article 326 of the Indian Constitution grants universal adult suffrage. Every citizen who meets the eligibility criteria has an equal, undivided vote — regardless of caste, religion, gender, or economic status.</p>
+                        <div class="card-tag">Article 326</div>
+                    </div>
+                    <div class="knowledge-card">
+                        <div class="card-icon">🏛️</div>
+                        <h3 data-i18n="kc3Title">Types of Elections</h3>
+                        <ul class="card-list">
+                            <li data-i18n="kc3li1">🏛️ <strong>Lok Sabha</strong> — Every 5 years (National)</li>
+                            <li data-i18n="kc3li2">🏢 <strong>Vidhan Sabha</strong> — State Legislature</li>
+                            <li data-i18n="kc3li3">🏘️ <strong>Local Body</strong> — Panchayat &amp; Municipal</li>
+                            <li data-i18n="kc3li4">👤 <strong>Rajya Sabha</strong> — By elected MLAs</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Who is Eligible -->
+            <section class="eligibility-section container-wide">
+                <div class="section-label" data-i18n="secEligLabel">✅ VOTER ELIGIBILITY IN INDIA</div>
+                <h2 class="section-title" data-i18n="eligTitle">Who Can Vote?</h2>
+                <div class="eligibility-grid">
+                    <div class="eligibility-card yes-card">
+                        <h3 data-i18n="eligYesTitle">✅ You ARE Eligible If:</h3>
+                        <ul>
+                            <li data-i18n="eligY1"><strong>Age:</strong> 18 years or older on the qualifying date</li>
+                            <li data-i18n="eligY2"><strong>Citizen:</strong> Indian citizen by birth, descent, or registration</li>
+                            <li data-i18n="eligY3"><strong>Residence:</strong> Ordinarily resident in a constituency</li>
+                            <li data-i18n="eligY4"><strong>Enrolled:</strong> Name appears in the Electoral Roll</li>
+                            <li data-i18n="eligY5"><strong>Sound mind:</strong> Not declared of unsound mind by a court</li>
+                        </ul>
+                    </div>
+                    <div class="eligibility-card no-card">
+                        <h3 data-i18n="eligNoTitle">❌ You CANNOT Vote If:</h3>
+                        <ul>
+                            <li data-i18n="eligN1">Under 18 years of age on the qualifying date</li>
+                            <li data-i18n="eligN2">Non-citizen or foreign national</li>
+                            <li data-i18n="eligN3">Convicted and sentenced to 2+ years imprisonment</li>
+                            <li data-i18n="eligN4">Declared of unsound mind by a competent court</li>
+                            <li data-i18n="eligN5">Disqualified under Representation of People Act, 1950</li>
+                        </ul>
+                    </div>
+                    <div class="eligibility-card how-card">
+                        <h3 data-i18n="eligHowTitle">📝 How to Register?</h3>
+                        <div class="steps-list">
+                            <div class="step"><span class="step-num">1</span><span data-i18n="step1">Visit <a href="https://voters.eci.gov.in" target="_blank">voters.eci.gov.in</a> or use Voter Helpline App</span></div>
+                            <div class="step"><span class="step-num">2</span><span data-i18n="step2">Fill <strong>Form 6</strong> for new registration</span></div>
+                            <div class="step"><span class="step-num">3</span><span data-i18n="step3">Upload Aadhaar / PAN / Passport as identity proof</span></div>
+                            <div class="step"><span class="step-num">4</span><span data-i18n="step4">Submit and track your application (EPIC number)</span></div>
+                            <div class="step"><span class="step-num">5</span><span data-i18n="step5">Download your <strong>e-EPIC</strong> card once approved</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Benefits of Voting -->
+            <section class="benefits-section container-wide">
+                <div class="section-label" data-i18n="secBenLabel">💡 WHY VOTE?</div>
+                <h2 class="section-title" data-i18n="benTitle">Benefits of Exercising Your Vote</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🏛️</div>
+                        <h4 data-i18n="ben1Title">Government Accountability</h4>
+                        <p data-i18n="ben1Body">Elected officials are accountable to voters. Your vote decides who governs, making politicians answer to the public.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🌱</div>
+                        <h4 data-i18n="ben2Title">Policy That Reflects You</h4>
+                        <p data-i18n="ben2Body">From healthcare to education, the policies enacted directly affect your daily life. Voting shapes these decisions.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">⚖️</div>
+                        <h4 data-i18n="ben3Title">Equality of Voice</h4>
+                        <p data-i18n="ben3Body">Every vote counts equally. A daily wage worker and a billionaire each get exactly one vote — true democratic equality.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🛡️</div>
+                        <h4 data-i18n="ben4Title">Rights Protection</h4>
+                        <p data-i18n="ben4Body">Elected bodies pass laws protecting your fundamental rights. Non-voters give up their say in who protects those rights.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">📈</div>
+                        <h4 data-i18n="ben5Title">Economic Development</h4>
+                        <p data-i18n="ben5Body">Local and national budgets are controlled by elected governments. Your vote decides investment in roads, hospitals, and schools.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon">🌐</div>
+                        <h4 data-i18n="ben6Title">National Identity</h4>
+                        <p data-i18n="ben6Body">India is the world's largest democracy. Every vote cast is a contribution to this historic democratic experiment.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ECI Process Timeline -->
+            <section class="timeline-section container-wide">
+                <div class="section-label" data-i18n="secTlLabel">📋 ELECTION PROCESS</div>
+                <h2 class="section-title" data-i18n="tlTitle">How an Indian Election Works</h2>
+                <div class="timeline">
+                    <div class="timeline-item"><div class="tl-dot">1</div><div class="tl-content"><h4 data-i18n="tl1h">Model Code of Conduct</h4><p data-i18n="tl1p">ECI announces election dates; MCC comes into force immediately, restricting party activities.</p></div></div>
+                    <div class="timeline-item"><div class="tl-dot">2</div><div class="tl-content"><h4 data-i18n="tl2h">Nomination</h4><p data-i18n="tl2p">Candidates file nomination papers with the Returning Officer within the prescribed date.</p></div></div>
+                    <div class="timeline-item"><div class="tl-dot">3</div><div class="tl-content"><h4 data-i18n="tl3h">Scrutiny</h4><p data-i18n="tl3p">RO scrutinizes nominations for validity. Candidates can withdraw within a specified period.</p></div></div>
+                    <div class="timeline-item"><div class="tl-dot">4</div><div class="tl-content"><h4 data-i18n="tl4h">Campaign Period</h4><p data-i18n="tl4p">48 hours before polling, all campaigning must stop (Silent Period).</p></div></div>
+                    <div class="timeline-item"><div class="tl-dot">5</div><div class="tl-content"><h4 data-i18n="tl5h">Polling Day</h4><p data-i18n="tl5p">Voters cast ballots via EVM at their designated polling booth. VVPAT slip confirms vote.</p></div></div>
+                    <div class="timeline-item"><div class="tl-dot">6</div><div class="tl-content"><h4 data-i18n="tl6h">Counting &amp; Result</h4><p data-i18n="tl6p">Votes are counted under strict supervision. Winning candidate declared by Returning Officer.</p></div></div>
+                </div>
+            </section>
+
+        </div><!-- /route-home -->
+
+
+        <!-- ======== SECTION 2: POLITICAL FLASHCARDS ======== -->
+        <div id="route-flashcards" class="route-view" style="display:none;">
+            <section class="flashcard-page container-wide">
+                <div class="section-label" data-i18n="fcLabel">📚 POLITICAL KNOWLEDGE CARDS</div>
+
+                <!-- Tab Switcher -->
+                <div class="card-tabs">
+                    <button class="card-tab active" data-deck="current" data-i18n="tab1">🏛️ Current Leaders</button>
+                </div>
+
+                <!-- Card Viewer -->
+                <div class="flashcard-viewer">
+                    <div class="flashcard-wrap">
+                        <div class="flashcard" id="main-flashcard">
+                            <div class="flashcard-front" id="card-front">
+                                <div class="card-category" id="card-category">Current Leaders</div>
+                                <div class="card-question" id="card-question">Narendra Modi (Current PM)
+
+Serving since May 2014. BJP. 17th and 18th Lok Sabha PM. Known for Digital India, Make in India, GST, and Chandrayaan-3.</div>
+                            </div>
+                            <div class="flashcard-back" id="card-back">
+                                <div class="card-answer" id="card-answer">Tap Next to see more leaders</div>
+                                <div class="card-detail" id="card-detail"></div>
+                                <button id="read-flashcard-btn" class="btn-outline" style="margin-top:12px;width:100%;">🔊 Listen</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mini Cards Grid -->
+                <div class="mini-cards-grid" id="mini-cards-grid"></div>
+
+                <!-- ======== STATIC PM HISTORY SECTION ======== -->
+                <div class="pm-history-section" style="margin-top: 4rem;">
+                    <div class="section-label" style="margin-bottom: 0.5rem;">🇮🇳 PRIME MINISTERS OF INDIA SINCE 1947</div>
+                    <p style="color: var(--text-muted); margin-bottom: 2.5rem; font-size:0.95rem;">All Prime Ministers who served India from Independence to today</p>
+                    <div class="pm-grid">
+
+                        <div class="pm-card">
+                            <div class="pm-number">1st PM</div>
+                            <div class="pm-name">Jawaharlal Nehru</div>
+                            <div class="pm-meta">1947 – 1964 &nbsp;·&nbsp; <span class="pm-party inc">INC</span></div>
+                            <p class="pm-desc">17 years in office — the longest. Founded IITs, AIIMS, IIMs & ISRO. Architect of Five-Year Plans, mixed-economy model & Non-Aligned Movement. Panchsheel doctrine. Shaped modern India's democratic foundation.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">Acting PM</div>
+                            <div class="pm-name">Gulzarilal Nanda</div>
+                            <div class="pm-meta">1964 &amp; 1966 &nbsp;·&nbsp; <span class="pm-party inc">INC</span></div>
+                            <p class="pm-desc">Served twice as Acting PM after the deaths of Nehru (1964) and Shastri (1966). Senior Congress leader and a champion of labour rights and social welfare.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">2nd PM</div>
+                            <div class="pm-name">Lal Bahadur Shastri</div>
+                            <div class="pm-meta">1964 – 1966 &nbsp;·&nbsp; <span class="pm-party inc">INC</span></div>
+                            <p class="pm-desc">Led India to victory in the 1965 Indo-Pakistan War. Coined the slogan "Jai Jawan Jai Kisan". Spearheaded the Green Revolution &amp; White Revolution (Operation Flood). Died in Tashkent, 1966.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">3rd &amp; 6th PM</div>
+                            <div class="pm-name">Indira Gandhi</div>
+                            <div class="pm-meta">1966–77, 1980–84 &nbsp;·&nbsp; <span class="pm-party inc">INC</span></div>
+                            <p class="pm-desc">India's only female PM. Led 1971 war — creation of Bangladesh. Pokhran-I nuclear test 1974. Nationalised 14 banks. Imposed Emergency (1975–77). Abolished privy purses. Assassinated in 1984.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">4th PM</div>
+                            <div class="pm-name">Morarji Desai</div>
+                            <div class="pm-meta">1977 – 1979 &nbsp;·&nbsp; <span class="pm-party jp">Janata Party</span></div>
+                            <p class="pm-desc">First non-Congress PM of India. Led Janata Party government post-Emergency. Rolled back 42nd Amendment excesses. Restored civil liberties. Awarded Pakistan's Nishan-e-Pakistan.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">5th PM</div>
+                            <div class="pm-name">Charan Singh</div>
+                            <div class="pm-meta">1979 – 1980 &nbsp;·&nbsp; <span class="pm-party jp">Janata Party (S)</span></div>
+                            <p class="pm-desc">Champion of farmers and agrarian India. Never faced Parliament as PM — resigned before confidence vote. Shortest-serving elected PM. Advocated for rural India's economic rights throughout his career.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">7th PM</div>
+                            <div class="pm-name">Rajiv Gandhi</div>
+                            <div class="pm-meta">1984 – 1989 &nbsp;·&nbsp; <span class="pm-party inc">INC</span></div>
+                            <p class="pm-desc">Youngest PM at age 40. Launched India's IT revolution, computerised Railways &amp; postal services. Lowered voting age from 21→18. Indo-Sri Lanka Accord. Navratna PSUs. Assassinated in 1991.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">8th PM</div>
+                            <div class="pm-name">V. P. Singh</div>
+                            <div class="pm-meta">1989 – 1990 &nbsp;·&nbsp; <span class="pm-party jd">Janata Dal</span></div>
+                            <p class="pm-desc">Implemented Mandal Commission recommendations — 27% OBC reservations in government jobs. Led National Front minority government. Resigned after Lok Sabha confidence vote was lost.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">9th PM</div>
+                            <div class="pm-name">Chandra Shekhar</div>
+                            <div class="pm-meta">1990 – 1991 &nbsp;·&nbsp; <span class="pm-party sjp">SJP</span></div>
+                            <p class="pm-desc">Led Samajwadi Janata Party. Minority government backed by Congress. Managed 1991 Balance of Payments crisis by pledging gold reserves. Served only 7 months.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">10th PM</div>
+                            <div class="pm-name">P. V. Narasimha Rao</div>
+                            <div class="pm-meta">1991 – 1996 &nbsp;·&nbsp; <span class="pm-party inc">INC</span></div>
+                            <p class="pm-desc">Father of India's economic reforms. Launched LPG (Liberalisation, Privatisation, Globalisation) with FM Manmohan Singh. Look East Policy. Nuclear deterrence advances. Managed Babri Masjid aftermath.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">11th PM</div>
+                            <div class="pm-name">H. D. Deve Gowda</div>
+                            <div class="pm-meta">1996 – 1997 &nbsp;·&nbsp; <span class="pm-party jd">Janata Dal</span></div>
+                            <p class="pm-desc">JD leader from Karnataka. Led United Front coalition government. Focused on rural development and federalism. Resigned after Congress withdrew support from outside.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">12th PM</div>
+                            <div class="pm-name">I. K. Gujral</div>
+                            <div class="pm-meta">1997 – 1998 &nbsp;·&nbsp; <span class="pm-party jd">Janata Dal</span></div>
+                            <p class="pm-desc">Gujral Doctrine — India gives without reciprocity to smaller neighbours. Veteran foreign minister &amp; diplomat. Led minority government; resigned after Jain Commission report cited Congress link.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">13th PM</div>
+                            <div class="pm-name">Atal Bihari Vajpayee</div>
+                            <div class="pm-meta">1998 – 2004 &nbsp;·&nbsp; <span class="pm-party bjp">BJP</span></div>
+                            <p class="pm-desc">First non-Congress PM to complete a full 5-year term. Pokhran-II nuclear tests 1998. Won Kargil War. Golden Quadrilateral highway network. PMGSY rural roads. Sarva Shiksha Abhiyan. Bharat Ratna 2015.</p>
+                        </div>
+
+                        <div class="pm-card">
+                            <div class="pm-number">14th PM</div>
+                            <div class="pm-name">Manmohan Singh</div>
+                            <div class="pm-meta">2004 – 2014 &nbsp;·&nbsp; <span class="pm-party inc">INC</span></div>
+                            <p class="pm-desc">First Sikh PM. Oxford &amp; Cambridge economist. NREGA, RTI Act, Aadhaar, US-India Nuclear Deal (123 Agreement), Bharat Nirman. Architect of 1991 LPG reforms as Finance Minister.</p>
+                        </div>
+
+                        <div class="pm-card pm-card-current">
+                            <div class="pm-number">15th PM</div>
+                            <div class="pm-name">Narendra Modi <span style="font-size:0.75rem; background:#22c55e; color:#fff; padding:2px 8px; border-radius:20px; margin-left:6px;">Current</span></div>
+                            <div class="pm-meta">2014 – Present &nbsp;·&nbsp; <span class="pm-party bjp">BJP</span></div>
+                            <p class="pm-desc">Former Gujarat CM (2001–14). First PM born after Independence. Jan Dhan, Make in India, Swachh Bharat, GST, Chandrayaan-3, Article 370 revocation, ₹78L cr infra spend. Historic third consecutive term 2024.</p>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- ======== END PM HISTORY SECTION ======== -->
+
+                <!-- PM Bar Chart -->
+                <div id="pm-chart-section" class="chart-section" style="display:none;">
+                    <div class="section-label" style="margin-top:3rem;">📊 PM IMPACT COMPARISON</div>
+                    <h3 class="chart-title">Who Is the Best Prime Minister? — Impact Score Analysis</h3>
+                    <div class="chart-note">Scores based on governance legacy, economic impact, foreign policy, social reforms & historical significance.</div>
+                    <div class="chart-wrap">
+                        <canvas id="pm-chart-canvas" style="width:100%;"></canvas>
+                    </div>
+                </div>
+
+
+                <!-- State CMs Bar Chart -->
+                <div id="statecm-chart-section" class="chart-section" style="display:none;">
+                    <div class="section-label" style="margin-top:3rem;">📊 STATE CM COMPARISON</div>
+                    <h3 class="chart-title">Current State CMs — Governance Score (Top 10)</h3>
+                    <div class="chart-note">Top 10 current state CMs ranked by governance impact score (2024 assessment).</div>
+                    <div class="chart-wrap">
+                        <canvas id="statecm-chart-canvas" style="width:100%;"></canvas>
+                    </div>
+                </div>
+            </section>
+        </div><!-- /route-flashcards -->
+
+        <!-- ======== SECTION 3: VOTER ACTION CENTER ======== -->
+        <div id="route-services" class="route-view" style="display:none;">
+            <section class="services-page container-wide">
+                <div class="section-label" data-i18n="svcLabel">⚡ VOTER ACTION CENTER</div>
+                <h2 class="section-title" data-i18n="servicesTitle">Your Electoral Services Hub</h2>
+
+                <div class="service-cards-grid">
+                    <div class="service-card-v2 featured">
+                        <div class="sc-icon">📱</div>
+                        <h3 data-i18n="svc1Title">Access e-EPIC Portal</h3>
+                        <p data-i18n="svc1Body">Download your Electronic Electoral Photo Identity Card from the unified ECI platform.</p>
+                        <div class="sc-actions">
+                            <button class="btn-primary" onclick="navigateAndAsk('#voty', 'Guide me through the e-EPIC Portal step by step')" data-i18n="askVoty">Ask VOTY</button>
+                            <a href="https://voters.eci.gov.in" target="_blank" class="btn-outline" data-i18n="officialPortal">Official Portal ↗</a>
+                        </div>
+                    </div>
+                    <div class="service-card-v2">
+                        <div class="sc-icon">📝</div>
+                        <h3 data-i18n="svc2Title">Register to Vote (Form 6)</h3>
+                        <p data-i18n="svc2Body">New voter registration for citizens turning 18. Apply online or at your BLO office.</p>
+                        <div class="sc-actions">
+                            <button class="btn-primary" onclick="navigateAndAsk('#voty', 'How do I fill Form 6 for new voter registration? Give step by step guide.')" data-i18n="getGuide">Get Guide</button>
+                            <a href="https://voters.eci.gov.in/home" target="_blank" class="btn-outline" data-i18n="applyOnline">Apply Online ↗</a>
+                        </div>
+                    </div>
+                    <div class="service-card-v2">
+                        <div class="sc-icon">📍</div>
+                        <h3 data-i18n="svc3Title">Find Your Polling Booth</h3>
+                        <p data-i18n="svc3Body">Locate your nearest polling station using your EPIC number or constituency details.</p>
+                        <div class="sc-actions">
+                            <button class="btn-primary" onclick="navigateAndAsk('#voty', 'How can I find my polling booth?')" data-i18n="askVoty2">Ask VOTY</button>
+                            <a href="https://electoralsearch.eci.gov.in" target="_blank" class="btn-outline" data-i18n="search">Search ↗</a>
+                        </div>
+                    </div>
+                    <div class="service-card-v2">
+                        <div class="sc-icon">🔍</div>
+                        <h3 data-i18n="svc4Title">Verify Voter ID</h3>
+                        <p data-i18n="svc4Body">Check if a Voter ID is registered in our probabilistic Bloom Filter system.</p>
+                        <div class="sc-actions-form">
+                            <input type="text" id="voter-id-input" placeholder="e.g. WBA1234567" maxlength="10">
+                            <button class="btn-primary" id="verify-voter-btn" data-i18n="verify">Verify</button>
+                        </div>
+                        <p id="voter-result" class="voter-result"></p>
+                    </div>
+                    <div class="service-card-v2">
+                        <div class="sc-icon">📊</div>
+                        <h3 data-i18n="svc5Title">Election Schedule 2026</h3>
+                        <p data-i18n="svc5Body">View the Merkle-verified tamper-proof election event calendar for 2026.</p>
+                        <div class="sc-actions">
+                            <button class="btn-primary" id="load-schedule-btn" data-i18n="loadSchedule">Load Schedule</button>
+                        </div>
+                        <div id="schedule-result"></div>
+                    </div>
+                    <div class="service-card-v2">
+                        <div class="sc-icon">🏛️</div>
+                        <h3 data-i18n="svc6Title">Candidate Information</h3>
+                        <p data-i18n="svc6Body">Research candidates' backgrounds, affidavits, and criminal records via ECI Affidavit Portal.</p>
+                        <div class="sc-actions">
+                            <button class="btn-primary" onclick="navigateAndAsk('#voty', 'How can I check the background and affidavit of election candidates?')" data-i18n="askVoty3">Ask VOTY</button>
+                            <a href="https://affidavit.eci.gov.in" target="_blank" class="btn-outline" data-i18n="viewAffidavits">View Affidavits ↗</a>
+                        </div>
+                    </div>
+                    <div class="service-card-v2">
+                        <div class="sc-icon">🎯</div>
+                        <h3 data-i18n="svc7Title">Civic Quiz</h3>
+                        <p data-i18n="svc7Body">Test your knowledge on Indian elections and earn your Verified Citizen badge.</p>
+                        <div class="sc-actions">
+                            <button class="btn-primary" id="load-quiz-service-btn" data-i18n="generateQuiz">Generate Quiz</button>
+                        </div>
+                        <div id="quiz-service-result"></div>
+                    </div>
+                    <div class="service-card-v2">
+                        <div class="sc-icon">🚨</div>
+                        <h3 data-i18n="svc8Title">Spot the Fake</h3>
+                        <p data-i18n="svc8Body">Analyze claims and headlines for AI-generated misinformation during elections.</p>
+                        <div class="sc-actions-form">
+                            <textarea id="claim-input" placeholder="Paste a claim or headline..." rows="2"></textarea>
+                            <button class="btn-primary" id="analyze-claim-btn" data-i18n="analyze">Analyze</button>
+                        </div>
+                        <div id="analysis-result" class="analysis-card" style="display:none;"></div>
+                    </div>
+                </div>
+            </section>
+        </div><!-- /route-services -->
+
+        <!-- ======== SECTION 4: VOTY CHAT ======== -->
+        <div id="route-voty" class="route-view" style="display:none;">
+            <div class="voty-wrapper">
+                <div class="voty-header">
+                    <div class="voty-avatar-lg" style="display: none;">
+                    </div>
+                    <div>
+                        <h2 class="voty-title">VOTY</h2>
+                        <p class="voty-subtitle" data-i18n="votySubtitle">Your 2026 ECI Election Intelligence Assistant</p>
+                    </div>
+                    <div class="voty-status"><span class="status-dot"></span><span data-i18n="onlineStatus"> Online</span></div>
+                </div>
+
                 <div class="suggested-chips" id="suggested-chips">
-                    <button class="chip" onclick="askQuestion('How to apply for e-EPIC?')">How to apply for e-EPIC?</button>
-                    <button class="chip" onclick="askQuestion('What is Form 6?')">What is Form 6?</button>
-                    <button class="chip" onclick="askQuestion('Where is my polling station?')">Where is my polling station?</button>
+                    <button class="chip" onclick="askQuestion('How to apply for e-EPIC?')" data-i18n="chip1">How to apply for e-EPIC?</button>
+                    <button class="chip" onclick="askQuestion('What is Form 6?')" data-i18n="chip2">What is Form 6?</button>
+                    <button class="chip" onclick="askQuestion('Where is my polling station?')" data-i18n="chip3">Where is my polling station?</button>
+                    <button class="chip" onclick="askQuestion('What is the Model Code of Conduct?')" data-i18n="chip4">What is MCC?</button>
+                    <button class="chip" onclick="askQuestion('What is EVM and VVPAT?')" data-i18n="chip5">EVM &amp; VVPAT</button>
                 </div>
 
-            <div class="chat-window" id="chat-window" role="log" aria-live="polite">
-                <!-- Chat messages will appear here -->
-                <div class="message ai-message">
-                    <div class="message-header">
-                        <div class="voty-avatar">
-                            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="50" cy="50" r="50" fill="#0d6efd" />
-                                <!-- Ballot box -->
-                                <rect x="25" y="40" width="50" height="40" rx="4" fill="#ffffff" />
-                                <rect x="20" y="35" width="60" height="5" rx="2" fill="#e9ecef" />
-                                <!-- Checkmark -->
-                                <path d="M40 55 L48 63 L65 45" stroke="#0d6efd" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                            </svg>
+                <div class="chat-window" id="chat-window" role="log" aria-live="polite">
+                    <div class="message ai-message">
+                        <div class="message-header">
+                            <div class="voty-avatar-sm">
+                                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="50" cy="50" r="50" fill="#0d6efd"/>
+                                    <rect x="25" y="40" width="50" height="40" rx="4" fill="#fff"/>
+                                    <rect x="20" y="35" width="60" height="5" rx="2" fill="#e9ecef"/>
+                                    <path d="M40 55 L48 63 L65 45" stroke="#0d6efd" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </div>
+                            <span class="voty-name">VOTY</span>
                         </div>
-                        <span class="voty-name">VOTY</span>
+                        <p class="message-text" data-i18n="welcomeMsg">नमस्ते! 🙏 I'm VOTY, your AI Election Assistant. Ask me anything about India's voting process, election laws, or how to register as a voter!</p>
                     </div>
-                    <p>Hello! I'm VOTY, your Election Assistant. Ask me anything about the voting process.</p>
                 </div>
+
+                <form id="chat-form" class="chat-input-form" aria-label="Chat Form">
+                    <div class="input-wrapper">
+                        <input type="text" id="chat-input" placeholder="Ask a question..." autocomplete="off" aria-label="Your Question" required maxlength="500">
+                        <input type="hidden" name="bot_trap" id="bot_trap" value="">
+                        <div id="autocomplete-suggestions" class="autocomplete-dropdown"></div>
+                    </div>
+                    <button type="submit" id="send-btn" aria-label="Send Message" class="btn-primary" data-i18n="sendBtn">Send</button>
+                </form>
             </div>
+        </div><!-- /route-voty -->
 
-            <form id="chat-form" class="chat-input-form" aria-label="Chat Form">
-                <div class="input-wrapper">
-                    <input type="text" id="chat-input" placeholder="Ask a question..." autocomplete="off" aria-label="Your Question" required maxlength="500">
-                    <input type="hidden" name="bot_trap" id="bot_trap" value="">
-                    <div id="autocomplete-suggestions" class="autocomplete-dropdown"></div>
-                </div>
-                <button type="submit" id="send-btn" aria-label="Send Message" class="btn-primary">Send</button>
-            </form>
-            </section>
-        </div>
-
-        <!-- ROUTE: SERVICES (Voter Action Center) -->
-        <div id="route-services" class="route-view" style="display: none;">
-            <section class="services-section">
-                <h2>Voter Action Center (ECINET Aligned)</h2>
-                <div class="service-cards">
-                    <div class="service-card">
-                        <h3>Access e-EPIC Portal</h3>
-                        <p>Download your Electronic Electoral Photo Identity Card directly from the unified platform.</p>
-                        <button class="btn-primary" onclick="askQuestion('Guide me through the e-EPIC Portal')">Initiate e-EPIC Guide</button>
-                    </div>
-                    <div class="service-card">
-                        <h3>Initiate Form 6</h3>
-                        <p>Begin your New Voter Registration procedural requirements.</p>
-                        <button class="btn-primary" onclick="askQuestion('How do I fill out Form 6?')">Start Form 6 Guide</button>
-                    </div>
-                    <div class="service-card">
-                        <h3>Locate your BLO</h3>
-                        <p>Enter your 6-digit PIN code to map your Booth Level Officer address logic.</p>
-                        <div class="input-wrapper" style="display: flex; gap: 10px; margin-top: 10px;">
-                            <input type="text" id="pin-input" placeholder="e.g. 110001" maxlength="6">
-                            <button class="btn-primary" id="find-blo-btn">Track</button>
-                        </div>
-                        <p id="blo-result" style="margin-top: 10px; font-weight: 600; color: var(--primary-color);"></p>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- ROUTE: DEEPFAKE (Spot the Fake) -->
-        <div id="route-deepfake" class="route-view" style="display: none;">
-            <section class="deepfake-module">
-                <h2>Spot the Fake</h2>
-                <p>Learn how to identify AI-generated misinformation during the 2026 Elections.</p>
-                <div class="card error-card">
-                    <h3>❌ Misinformation Red Flags</h3>
-                    <ul>
-                        <li>Unnatural blinking or robotic voice in video broadcasts.</li>
-                        <li>Sensationalist headlines with zero verified source links.</li>
-                        <li>Unverified WhatsApp forwards regarding polling dates.</li>
-                    </ul>
-                </div>
-                <div class="card success-card">
-                    <h3>✅ Verification Checklist (ECINET Mandates)</h3>
-                    <ul>
-                        <li>Always check for the <strong>Official ECI Digital Signature</strong> on PDF notifications.</li>
-                        <li>Scan the <strong>Official QR Code</strong> provided on physical election notices.</li>
-                        <li>Verify dates directly on <strong>eci.gov.in</strong>.</li>
-                    </ul>
-                </div>
-            </section>
-        </div>
-
-        <!-- ROUTE: QUIZ -->
-        <div id="route-quiz" class="route-view" style="display: none;">
-            <section class="quiz-section" id="quiz-section" aria-labelledby="quiz-title">
-                <h3 id="quiz-title">Test Your Knowledge</h3>
-                <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
-                <p id="timer-text" style="font-weight:600; margin-bottom: 10px;">30s remaining</p>
-                <button id="load-quiz-btn" class="btn-primary">Generate Quiz</button>
-                <div id="quiz-container"></div>
-                
-                <div id="scorecard-container" style="display:none; margin-top: 2rem;">
-                    <h3>Your VoteWise Scorecard</h3>
-                    <div class="digital-badge" id="digital-badge">🏅 Verified Citizen</div>
-                    <canvas id="score-canvas" width="400" height="250" style="border:1px solid var(--chat-border); width: 100%; border-radius: 8px; margin-bottom: 1rem;"></canvas>
-                    <button id="download-score" class="btn-primary">Download Scorecard</button>
-                </div>
-            </section>
-        </div>
     </main>
 
-    <footer style="text-align: center; padding: 2rem 1rem; margin-top: 2rem; border-top: 1px solid var(--chat-border);">
-        <button id="reset-settings-btn" style="background: none; border: none; color: var(--text-color); text-decoration: underline; cursor: pointer; opacity: 0.7; font-size: 0.9rem;">Reset All Settings (Atomic Persistence)</button>
+    <footer class="footer">
+        <div class="container-wide footer-inner">
+            <div class="footer-brand">🗳️ VoteWise — Built for every Indian citizen</div>
+            <div class="footer-links">
+                <a href="https://eci.gov.in" target="_blank">ECI ↗</a>
+                <a href="https://voters.eci.gov.in" target="_blank">Voter Portal ↗</a>
+                <a href="https://affidavit.eci.gov.in" target="_blank">Affidavits ↗</a>
+            </div>
+            <div class="footer-note">AI-Assisted Educational Content | Verified by VoteWise</div>
+        </div>
     </footer>
 
-    <script>
-        // Register Service Worker for Offline Mode
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(registration => {
-                    console.log('SW registered: ', registration);
-                }).catch(registrationError => {
-                    console.log('SW registration failed: ', registrationError);
-                });
-            });
-        }
-    </script>
     <script src="/static/js/main.js"></script>
 </body>
 </html>
