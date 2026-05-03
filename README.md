@@ -59,15 +59,19 @@ py -3.12 run.py
 
 Access the platform at `http://127.0.0.1:5000`.
 
+## 🛡️ Engineering Excellence & Security
+
+- **Automated Testing:** Comprehensive unit test suite in `tests/` covering API routes and core logic.
+- **Responsible AI:** Implemented strict **Gemini Safety Settings** to block harassment, hate speech, and dangerous content.
+- **Type Safety:** 100% Python Type Hinting used for better maintainability and code quality.
+- **Security Headers:** Powered by **Flask-Talisman** with custom CSP to prevent XSS and clickjacking.
+- **Performance:** Multi-tier caching with **LRU Cache** (Local) and **Redis** (Production) for ultra-fast AI responses.
+
 ## ⚖️ Ethical AI & Compliance
-VoteWise adheres to the strict **ECI 2026 Directives**:
-<<<<<<< HEAD
-- **Silence Period Sentinel:** Automatically detects if the system clock is within 48 hours of polling days (e.g., April 14, 23, 29). If active, VOTY toggles into "Logistics Only Mode", strictly prohibiting political analysis and candidate information, defaulting to booth location and voter procedure guidance.
-=======
-- **Silence Period Sentinel:** Automatically toggles into "Logistics Mode" 48 hours before polling to prevent political bias.
->>>>>>> d667752 (Integrated Gemini 2.5 Flash, updated modern UI, and improved backend resilience)
+VoteWise adheres to strict **ECI Directives**:
+- **Silence Period Sentinel:** Automatically detects if the system clock is within 48 hours of polling days. If active, VOTY toggles into "Logistics Only Mode", strictly prohibiting political analysis and candidate information.
 - **Ethical Watermarking:** All AI responses are labeled as "AI-Assisted Educational Content" to maintain transparency.
-- **Inclusive Design:** Optimized for low-literacy accessibility via clear iconography and vernacular persistence.
+- **Inclusive Design:** Optimized for accessibility via clear iconography and vernacular persistence.
 
 ---
 *Built for every Indian citizen. Empowering democracy through technology.*

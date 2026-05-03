@@ -51,26 +51,42 @@ election_merkle_tree = MerkleTree(election_data.get('election_events', []) + ele
 
 @api_bp.route('/chat', methods=['POST'])
 async def chat():
-    """Chat endpoint to handle user questions"""
-    data = request.get_json()
+    """
+    Handles conversational AI queries. Uses Gemini 2.5 Flash via an async deduplicator.
+    
+    Args:
+        JSON body containing 'question' (str), 'lang' (str), and optional 'silence_period' (bool).
+        
+    Returns:
+        JSON: {'answer': str} or an error response.
+    """
+    data = request.get_json(silent=True)
     if not data or 'question' not in data:
         return jsonify({"error": "Missing question parameter"}), 400
         
-    question = data['question']
+    question = data['question'].strip()
     target_lang = data.get('lang', 'en')
     is_silence_period = data.get('silence_period', False)
     
-    # Input length validation
+    # Input validation
+    if not question:
+        return jsonify({"error": "Question cannot be empty"}), 400
     if len(question) > 500:
         return jsonify({"error": "Question too long. Max 500 characters."}), 400
         
-    # Deduplicate requests and use Gemini for native translation
+    # Deduplicate and Execute via Gemini Helper
     try:
-        answer = await deduplicator.execute(f"{question}_{target_lang}_{is_silence_period}", ask_gemini, question, target_lang=target_lang, is_silence_period=is_silence_period)
+        answer = await deduplicator.execute(
+            f"{question}_{target_lang}_{is_silence_period}", 
+            ask_gemini, 
+            question, 
+            target_lang=target_lang, 
+            is_silence_period=is_silence_period
+        )
     except Exception as e:
-        return jsonify({"error": "Internal server error"}), 500
+        return jsonify({"error": f"AI Processing Error: {str(e)}"}), 500
         
-    # XSS Prevention
+    # Security: HTML Sanitization (XSS Prevention)
     safe_answer = sanitize_html(answer)
     
     return jsonify({"answer": safe_answer})
