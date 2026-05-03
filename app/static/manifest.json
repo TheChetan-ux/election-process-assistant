@@ -1,9 +1,17 @@
 {
-  "name": "ElectionEdu",
-  "short_name": "ElectionEdu",
+  "name": "VoteWise — Election Intelligence",
+  "short_name": "VoteWise",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0d6efd",
-  "description": "Election Process Education Assistant"
+  "theme_color": "#4F46E5",
+  "description": "India's most comprehensive Election Education & AI Assistant platform.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2633/2633813.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }

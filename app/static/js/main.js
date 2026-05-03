@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Register Service Worker for PWA / Offline support
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/static/js/sw.js')
+            .catch(err => console.log('Service Worker registration failed:', err));
+    }
+
     const chatForm = document.getElementById('chat-form');
     const chatInput = document.getElementById('chat-input');
     const chatWindow = document.getElementById('chat-window');

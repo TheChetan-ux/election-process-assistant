@@ -4,7 +4,9 @@ from flask_talisman import Talisman
 from flask_cors import CORS
 from app.config.settings import Config
 from app.models.rate_limiter import TokenBucketRateLimiter, SlidingWindowIPRateLimiter
+from app.helpers.logger import setup_logger
 import logging
+import uuid
 
 compress = Compress()
 cors = CORS()
@@ -18,8 +20,12 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     # Initialize extensions
-    compress.init_app(app) # Gzip compression on all responses
+    compress.init_app(app)
     cors.init_app(app)
+    
+    # Initialize Professional Logging
+    app.logger = setup_logger('voty_app')
+    app.logger.info("VoteWise Assistant Initializing...")
     
     # Security Headers (Relaxed for debugging)
     csp = {
@@ -41,8 +47,12 @@ def create_app(config_class=Config):
 
     @app.before_request
     def before_request():
+        # Assign Unique Request ID for tracing
+        request.request_id = str(uuid.uuid4())
+        
         # Global Token Bucket Limiter
         if not global_token_bucket.allow_request():
+             app.logger.warning("Global rate limit exceeded!")
              return jsonify({"error": "Global rate limit exceeded. Please try again later."}), 429
              
         # IP based sliding window

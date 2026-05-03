@@ -150,5 +150,16 @@ async def translate_batch_endpoint():
     try:
         translated = await translate_batch(texts, lang)
         return jsonify({"translations": translated})
-    except Exception as e:
+    except Exception:
         return jsonify({"translations": texts})
+
+@api_bp.route('/health', methods=['GET'])
+def health_check():
+    """
+    Standard health check endpoint for monitoring and load balancers.
+    """
+    return jsonify({
+        "status": "healthy",
+        "version": "1.2.0",
+        "service": "VoteWise AI Core"
+    }), 200

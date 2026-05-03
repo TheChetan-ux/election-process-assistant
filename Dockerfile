@@ -1,23 +1,23 @@
-# Use the official lightweight Python image.
+# Stage 1: Build stage
+FROM python:3.12-slim AS builder
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+# Stage 2: Production stage
 FROM python:3.12-slim
 
-# Set working directory
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy project files
+# Copy only the installed packages from builder
+COPY --from=builder /root/.local /root/.local
 COPY . .
 
-# Remove unnecessary files to keep image small
-RUN rm -rf .git .env extracted_main_js.txt
+# Update PATH to include the user-installed packages
+ENV PATH=/root/.local/bin:$PATH
+ENV PYTHONUNBUFFERED=1
 
-# Set environment variables (Defaults)
-ENV PORT=5000
-ENV GEMINI_MODEL=gemini-2.5-flash
+EXPOSE 8080
 
-# Run the web service on container startup.
-# Using gunicorn for production-grade performance.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 "run:app"
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "1", "--threads", "8", "--timeout", "0", "run:app"]

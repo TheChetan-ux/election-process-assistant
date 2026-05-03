@@ -56,6 +56,25 @@ body {
     overflow-x: hidden;
 }
 
+/* Accessibility Skip Link */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 24px;
+    z-index: 9999;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom-right-radius: 8px;
+    transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
 /* Glassmorphism Utilities */
 .glass {
     background: var(--surface-bg);

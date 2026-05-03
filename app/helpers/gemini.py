@@ -87,29 +87,35 @@ async def ask_gemini(question: str, target_lang: str = 'en', is_silence_period: 
         ]
     }
     
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload, timeout=15) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    try:
-                        answer = data['candidates'][0]['content']['parts'][0]['text']
-                    except (KeyError, IndexError):
-                        answer = "I apologize, but I am unable to provide information on that specific topic. Please ask about the election process or voter registration."
-                    
-                    # Update Caches
-                    lru_cache.put(q_hash, answer)
-                    try:
-                        await redis_client.set(f"faq:{q_hash}", answer, ex=86400)
-                    except Exception: pass
-                    return answer
-                else:
-                    error_data = await response.text()
-                    print(f"Gemini API Error ({response.status}): {error_data}")
-                    return "VOTY is currently undergoing maintenance. Please try again in a few moments."
-    except Exception as e:
-        print(f"Connection Error: {e}")
-        return "I'm having trouble connecting to my knowledge base. Please check your internet connection and try again."
+    for attempt in range(3):
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, headers=headers, json=payload, timeout=15) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        try:
+                            answer = data['candidates'][0]['content']['parts'][0]['text']
+                        except (KeyError, IndexError):
+                            answer = "I apologize, but I am unable to provide information on that specific topic. Please ask about the election process or voter registration."
+                        
+                        lru_cache.put(q_hash, answer)
+                        try:
+                            await redis_client.set(f"faq:{q_hash}", answer, ex=86400)
+                        except Exception: pass
+                        return answer
+                    elif response.status == 429:
+                        wait_time = (attempt + 1) * 2
+                        print(f"Rate limited. Retrying in {wait_time}s...")
+                        await asyncio.sleep(wait_time)
+                    else:
+                        error_data = await response.text()
+                        print(f"Gemini API Error ({response.status}): {error_data}")
+                        return "VOTY is currently undergoing maintenance. Please try again in a few moments."
+        except Exception as e:
+            if attempt == 2:
+                print(f"Connection Error after 3 attempts: {e}")
+                return "I'm having trouble connecting to my knowledge base. Please try again later."
+            await asyncio.sleep(1)
 
 
 async def generate_quiz(target_lang: str = 'en') -> list:
@@ -136,27 +142,36 @@ async def generate_quiz(target_lang: str = 'en') -> list:
     
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.7}
+        "generationConfig": {
+            "temperature": 0.7,
+            "responseMimeType": "application/json"
+        }
     }
     
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload, timeout=15) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    text = data['candidates'][0]['content']['parts'][0]['text']
-                    # Clean markdown formatting if present
-                    text = text.replace('```json', '').replace('```', '').strip()
-                    quiz_data = json.loads(text)
-                    
-                    try:
-                        await redis_client.set(cache_key, json.dumps(quiz_data), ex=3600) # Cache for 1 hour
-                    except Exception:
-                        pass
+    for attempt in range(3):
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, headers=headers, json=payload, timeout=15) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        text = data['candidates'][0]['content']['parts'][0]['text']
+                        text = text.replace('```json', '').replace('```', '').strip()
+                        quiz_data = json.loads(text)
                         
-                    return quiz_data
-                else:
-                    return [
+                        try:
+                            await redis_client.set(cache_key, json.dumps(quiz_data), ex=3600)
+                        except Exception: pass
+                        return quiz_data
+                    elif response.status == 429:
+                        await asyncio.sleep((attempt + 1) * 2)
+                    else:
+                        break
+        except Exception as e:
+            if attempt == 2: print(f"Quiz Generation Error: {e}")
+            await asyncio.sleep(1)
+            
+    # Professional Fallback Quiz
+    return [
                         {
                             "question": "What is the primary purpose of an election?",
                             "options": ["To collect taxes", "To choose leaders and representatives", "To enforce laws", "To manage businesses"],
