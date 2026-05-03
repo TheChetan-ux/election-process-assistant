@@ -172,28 +172,14 @@ async def generate_quiz(target_lang: str = 'en') -> list:
             
     # Professional Fallback Quiz
     return [
-                        {
-                            "question": "What is the primary purpose of an election?",
-                            "options": ["To collect taxes", "To choose leaders and representatives", "To enforce laws", "To manage businesses"],
-                            "answer": "To choose leaders and representatives"
-                        },
-                        {
-                             "question": "Who is eligible to vote in most democratic national elections?",
-                             "options": ["Only property owners", "Anyone over 10 years old", "Citizens who meet the minimum age requirement", "Only government employees"],
-                             "answer": "Citizens who meet the minimum age requirement"
-                        }
-                    ]
-    except Exception as e:
-        print(f"Quiz Generation Error: {e}")
-        return [
-            {
-                "question": "What is the primary purpose of an election?",
-                "options": ["To collect taxes", "To choose leaders and representatives", "To enforce laws", "To manage businesses"],
-                "answer": "To choose leaders and representatives"
-            },
-            {
-                 "question": "Who is eligible to vote in most democratic national elections?",
-                 "options": ["Only property owners", "Anyone over 10 years old", "Citizens who meet the minimum age requirement", "Only government employees"],
-                 "answer": "Citizens who meet the minimum age requirement"
-            }
-        ]
+        {
+            "question": "What is the primary purpose of an election?",
+            "options": ["To collect taxes", "To choose leaders and representatives", "To enforce laws", "To manage businesses"],
+            "answer": "To choose leaders and representatives"
+        },
+        {
+             "question": "Who is eligible to vote in most democratic national elections?",
+             "options": ["Only property owners", "Anyone over 10 years old", "Citizens who meet the minimum age requirement", "Only government employees"],
+             "answer": "Citizens who meet the minimum age requirement"
+        }
+    ]
