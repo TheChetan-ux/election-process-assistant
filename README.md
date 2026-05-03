@@ -61,11 +61,20 @@ Access the platform at `http://127.0.0.1:5000`.
 
 ## 🛡️ Engineering Excellence & Security
 
-- **Automated Testing:** Comprehensive unit test suite in `tests/` covering API routes and core logic.
-- **Responsible AI:** Implemented strict **Gemini Safety Settings** to block harassment, hate speech, and dangerous content.
-- **Type Safety:** 100% Python Type Hinting used for better maintainability and code quality.
-- **Security Headers:** Powered by **Flask-Talisman** with custom CSP to prevent XSS and clickjacking.
-- **Performance:** Multi-tier caching with **LRU Cache** (Local) and **Redis** (Production) for ultra-fast AI responses.
+- **CI/CD Pipeline:** Integrated **GitHub Actions** for automated linting and testing on every push.
+- **Advanced AI Core:** Uses **Gemini 2.5 Flash** with **Strict JSON Mode** and automatic **Exponential Backoff Retry Logic**.
+- **PWA Ready:** Full **Service Worker** integration for offline support and instant loading.
+- **Observability:** Structured logging with **Unique Request IDs** for distributed tracing.
+- **Enterprise Monitoring:** Dedicated `/api/health` endpoint for server heartbeat.
+- **Search Optimization:** Complete `robots.txt` and `sitemap.xml` for professional SEO.
+- **Responsible AI:** Implemented strict **Gemini Safety Settings** to block harassment and misinformation.
+- **Type Safety:** 100% Python Type Hinting used throughout the backend.
+
+## 🤝 Open Source Standards
+
+- **SECURITY.md:** Professional vulnerability disclosure policy.
+- **CONTRIBUTING.md:** Clear guidelines for community contributions.
+- **.flake8:** Enforced PEP 8 styling for clean, readable code.
 
 ## ⚖️ Ethical AI & Compliance
 VoteWise adheres to strict **ECI Directives**:
