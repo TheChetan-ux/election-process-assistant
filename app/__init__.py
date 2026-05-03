@@ -21,26 +21,14 @@ def create_app(config_class=Config):
     compress.init_app(app) # Gzip compression on all responses
     cors.init_app(app)
     
-    # Security Headers (Helmet equivalent)
+    # Security Headers (Relaxed for debugging)
     csp = {
-        'default-src': [
-            '\'self\'',
-            'https://fonts.googleapis.com',
-            'https://fonts.gstatic.com'
-        ],
-        'script-src': [
-            '\'self\'',
-            '\'unsafe-inline\'', 
-        ],
-        'style-src': [
-            '\'self\'',
-            '\'unsafe-inline\'',
-            'https://fonts.googleapis.com'
-        ],
-        'img-src': ['\'self\'', 'data:', 'https:'],
-        'connect-src': ['\'self\'', 'https://generativelanguage.googleapis.com', 'https://translation.googleapis.com']
+        'default-src': ['\'self\'', 'https:', 'data:'],
+        'script-src': ['\'self\'', '\'unsafe-inline\'', '\'unsafe-eval\'', 'https:'],
+        'style-src': ['\'self\'', '\'unsafe-inline\'', 'https:'],
+        'connect-src': ['*']
     }
-    Talisman(app, content_security_policy=csp, force_https=False) # Set force_https=True in prod
+    Talisman(app, content_security_policy=csp, force_https=False)
     
     # Logging system
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')

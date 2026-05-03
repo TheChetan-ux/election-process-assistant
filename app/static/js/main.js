@@ -376,12 +376,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const catEl = document.getElementById('card-category');
         if (catEl) {
             catEl.textContent = card.category;
-            document.getElementById('card-question').textContent = card.q;
-            document.getElementById('card-answer').textContent = card.a;
-            document.getElementById('card-detail').textContent = card.d;
-            document.getElementById('card-current').textContent = currentCardIdx + 1;
-            document.getElementById('card-total').textContent = deck.length;
-            document.getElementById('fc-progress-bar').style.width = `${((currentCardIdx + 1) / deck.length) * 100}%`;
+            const qEl = document.getElementById('card-question');
+            const aEl = document.getElementById('card-answer');
+            const dEl = document.getElementById('card-detail');
+            const curEl = document.getElementById('card-current');
+            const totEl = document.getElementById('card-total');
+            const pbEl = document.getElementById('fc-progress-bar');
+
+            if (qEl) qEl.textContent = card.q;
+            if (aEl) aEl.textContent = card.a;
+            if (dEl) dEl.textContent = card.d;
+            if (curEl) curEl.textContent = currentCardIdx + 1;
+            if (totEl) totEl.textContent = deck.length;
+            if (pbEl) pbEl.style.width = `${((currentCardIdx + 1) / deck.length) * 100}%`;
             
             const readBtn = document.getElementById('read-flashcard-btn');
             if (readBtn) {
