@@ -4,7 +4,6 @@ from flask_talisman import Talisman
 from flask_cors import CORS
 from app.config.settings import Config
 from app.models.rate_limiter import TokenBucketRateLimiter, SlidingWindowIPRateLimiter
-from app.helpers.logger import setup_logger
 import logging
 import uuid
 
@@ -23,8 +22,8 @@ def create_app(config_class=Config):
     compress.init_app(app)
     cors.init_app(app)
     
-    # Initialize Professional Logging
-    app.logger = setup_logger('voty_app')
+    # Configure Logging
+    app.logger.setLevel(logging.INFO)
     app.logger.info("VoteWise Assistant Initializing...")
     
     # Security Headers (Relaxed for debugging)

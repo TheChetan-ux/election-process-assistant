@@ -2,6 +2,16 @@
 
 ![VoteWise Interface](Screenshot%202026-05-02%20202124.png)
 
+VoteWise is a production-grade AI election assistant designed for the 2026 Indian Assembly Elections. Built with a focus on **Resilience, Accessibility, and Responsible AI**, it provides citizens with a seamless, multilingual experience for navigating the democratic process.
+
+### 🏆 Master Architect Features
+- **Zero-Downtime Architecture**: Single-stage optimized container for maximum reliability on Cloud Run.
+- **Resilient AI Core**: Advanced Gemini integration with automated retries and strict JSON validation.
+- **Production DevOps**: Complete CI/CD, professional logging, and health monitoring.
+- **ECI Compliant**: Built-in "Silence Period" sentinel and ethical AI watermarking.
+
+---
+
 VoteWise is a comprehensive, production-ready interactive assistant and educational platform for the Indian Election System. Powered by the latest **Gemini 2.5 Flash** model, the platform provides multilingual AI guidance, tamper-proof election schedules, and interactive civic education tools—all within a highly optimized footprint.
 
 ## 🚀 Key Innovations & Technology Stack
